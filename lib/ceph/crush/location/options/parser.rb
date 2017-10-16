@@ -36,7 +36,7 @@ module Ceph
             end
 
             def report(e)
-              ::Ceph::Crush::Location.log(e, Logger::ERROR)
+              ::Ceph::Crush::Location::Logger.send(e, Logger::ERROR)
               STDERR.puts "#{$PROGRAM_NAME}: #{e}"
               exit(-1)
             end
