@@ -8,8 +8,23 @@ module Ceph
           @osd = OSD.new
         end
 
+        def from_config
+          require 'shellwords'
+          ceph_conf_bin = '/usr/bin/ceph-conf'
+          cluster = ::Shellwords.escape @osd.cluster
+          type = 'osd'
+          id = ::Shellwords.escape @osd.id
+          location_command = "#{ceph_conf_bin} --cluster=#{cluster} "\
+                             "--name=#{type}.#{id} --lookup crush_location"
+          `#{location_command}`
+        rescue
+          ''
+        end
+
         def to_s
           Ceph::Crush::Location::Logger.send('Bucket.to_s')
+          ceph_location_config = from_config
+          return ceph_location_config unless ceph_location_config == ''
           [root_bucket, datacenter_bucket,
            row_bucket, rack_bucket, chassis_bucket,
            host_bucket, disk_chassis_bucket, enclosure_bucket].join('')

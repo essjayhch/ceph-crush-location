@@ -14,6 +14,7 @@ module Ceph
             def parse!
               ::Ceph::Crush::Location::Logger.send('parsing attributes')
               ::Ceph::Crush::Location.options = {}
+              ::Ceph::Crush::Location.options[:cluster] = 'ceph'
               grab!
               validate!
               default_env
@@ -50,7 +51,7 @@ module Ceph
 
             def options(opts)
               Ceph::Crush::Location::Logger.send('Options::Parser.options')
-              opts.on('-c', '--cluster CLUSTER', 'Specify Cluster Name') do |c|
+              opts.on('-c', '--cluster [CLUSTER]', 'Specify Cluster') do |c|
                 ::Ceph::Crush::Location.options[:cluster] = c
               end
 
@@ -90,9 +91,6 @@ module Ceph
 
             def validate!
               Ceph::Crush::Location::Logger.send('Options::Parser.validate!')
-              ::Ceph::Crush::Location.options.fetch(:cluster) do
-                raise OptionParser::MissingArgument, 'no \'cluster\' provided'
-              end
               ::Ceph::Crush::Location.options.fetch(:id) do
                 raise OptionParser::MissingArgument, 'no \'id\' provided'
               end

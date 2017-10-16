@@ -36,6 +36,8 @@ the json file can take the following format
 
 Should this file not be available from this location, you can specify the location using `ENV['NODE_INFO']`
 
+Should this file be missing, or if it is corrupted, it will behave as if it was not there and behave as with the defaults
+
 Beyond that there are three lower types provided which are derived as follows:
     root # Crush root, either default, or read from /path/to/osd/crush_root
     disk_chassis # JBOD level of redundancy read from /path/to/osd/disk_chassis
@@ -55,6 +57,12 @@ Your crush ruleset will require the following types to use this gem:
     type 6 row
     type 7 datacenter
     type 8 root
+
+### Config crush_location
+
+For any daemon, ceph optionally provides a `crush_location` option that can be set in the cluster configuration file on the host this script is invoked. Providing this for will override the operation of this script and return that value instead.
+ie setting it for [osd] will override all OSDSs on this host, setting it for [osd.N] will override for that osd only.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

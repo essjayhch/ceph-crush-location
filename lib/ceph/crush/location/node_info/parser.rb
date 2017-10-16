@@ -9,6 +9,8 @@ module Ceph
           Ceph::Crush::Location.nodeinfo = JSON.parse(
             ::File.read(Ceph::Crush::Location.options[:nodeinfo])
           )
+        rescue
+          Ceph::Crush::Location.nodeinfo = {}
         end
       end
     end
